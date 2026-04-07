@@ -209,7 +209,7 @@ class Viewport extends HTMLElement {
         this.sceneEnv = new SceneEnvironment(this.skinModel, this.scene, this.resolution);
         this.itemRenderer = new ItemRenderer(this.skinModel);
 
-        this.setupRenderer(this.quality);
+        this.setupRenderer();
 
         this.updateCameraFromConfig();
         this.updateLightsFromConfig();
