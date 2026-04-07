@@ -10,7 +10,7 @@ export class SceneEnvironment {
         };
         this.floor = this._makeFloor();
         this.bg    = this._makeGradientBG();
-        this._initLights(quality);
+        this._initLights(resolution);
     }
 
     _initLights(resolution) {
