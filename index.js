@@ -1,6 +1,6 @@
 import * as THREE from 'three';
-import { OrbitControls } from 'three-addons/controls/OrbitControls.js';
-import { GLTFExporter } from 'three-addons/exporters/GLTFExporter.js';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter.js';
 
 import { SkinModel } from "./skin/index.js";
 import { SceneEnvironment } from "./scene.js";
