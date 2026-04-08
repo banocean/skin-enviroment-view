@@ -1,0 +1,8 @@
+{
+  "name": "skin-environment-view",
+  "version": "1.0.0",
+  "exports": "./index.js",
+  "imports": {
+    "three": "npm:three@^0.183.2"
+  }
+}

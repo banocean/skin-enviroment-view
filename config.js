@@ -1,8 +1,3 @@
-/**
- * Configuration Management for Viewport
- * Handles config schema, conversion between legacy and current formats, and reactive updates
- */
-
 export function createDefaultConfig() {
     return {
         camera: {

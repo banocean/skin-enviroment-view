@@ -7,7 +7,6 @@ import { SceneEnvironment } from "./scene.js";
 import { ItemRenderer } from "./item.js";
 import { createDefaultConfig, createReactiveConfigProxy } from "./config.js";
 
-const VIEW_W = 600, VIEW_H = 600;
 const SKIN_WIDTH = 64;
 const SKIN_HEIGHT = 64;
 
@@ -16,6 +15,32 @@ class Viewport extends HTMLElement {
 
     constructor() {
         super();
+        this.attachShadow({ mode: "open" });
+        const style = document.createElement('style');
+        style.textContent = `
+            .canvas-container { 
+                width: 100%; 
+                height: 100%; 
+                outline: none;
+                overflow: hidden;
+            }
+            
+            canvas { 
+                display: block; 
+                width: 100% !important; 
+                height: 100% !important; 
+                cursor: grab;
+                overflow: hidden;
+            }
+            
+            canvas:active { cursor: grabbing; }
+        `;
+
+        this.shadowRoot.appendChild(style)
+
+        this.container = document.createElement("div")
+        this.container.classList.add("canvas-container");
+        this.shadowRoot.appendChild(this.container)
 
         this.renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true });
         this.renderer.shadowMap.enabled = true;
@@ -28,22 +53,50 @@ class Viewport extends HTMLElement {
         this.scene = new THREE.Scene();
         this.scene.fog = new THREE.Fog(0xffffff, 10, 50);
 
-        this.threeCamera = (() => {
-            const hw = VIEW_W / 240, hh = VIEW_H / 240;
-            const cam = new THREE.OrthographicCamera(-hw, hw, hh, -hh, 0.1, 50);
-            cam.position.z = 4;
-            return cam;
-        })();
+        this.threeCamera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 50);
+        this.threeCamera.position.z = 4;
 
         this.skinModel = null;
         this.sceneEnv = null;
         this.modelReady = false;
-        this.currentSkinURL = null;
 
         this._isSyncingCamera = false;
 
-        this.innerHTML = "<div></div>";
         this.config = createDefaultConfig();
+
+        this.resizeObserver = new ResizeObserver(entries => {
+            for (let entry of entries) {
+                const { width, height } = entry.contentRect;
+                if (width > 0 && height > 0) this.onResize(width, height);
+            }
+        });
+    }
+
+    onResize() {
+        if (!this.renderer) return;
+
+        let dpr = window.devicePixelRatio * (this.resolution || 2);
+
+        this.renderer.setPixelRatio(dpr);
+        this.renderer.setSize(this.clientWidth * this.resolution, this.clientHeight * this.resolution, false);
+
+        const frustumSize = 5;
+        const aspect = this.clientWidth / this.clientHeight;
+        this.threeCamera.left = -frustumSize * aspect / 2;
+        this.threeCamera.right = frustumSize * aspect / 2;
+        this.threeCamera.top = frustumSize / 2;
+        this.threeCamera.bottom = -frustumSize / 2;
+        this.threeCamera.updateProjectionMatrix();
+
+        this.doRender();
+    }
+
+    connectedCallback() {
+        this.resizeObserver.observe(this);
+    }
+
+    disconnectedCallback() {
+        this.resizeObserver.unobserve(this);
     }
 
     get config() {
@@ -191,15 +244,15 @@ class Viewport extends HTMLElement {
 
     setupRenderer() {
         this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-        this.renderer.setSize(VIEW_W * this.resolution, VIEW_H * this.resolution);
-        this.sceneEnv?.setShadowMapSize(1024 * this.resolution);
+        this.sceneEnv.setShadowMapSize(1024 * this.resolution)
+        this.onResize()
         this.threeCamera.updateProjectionMatrix();
         if (this.sceneEnv) this.sceneEnv.light.directional.shadow.needsUpdate = true;
     }
 
     initScene() {
         this.skinModel = new SkinModel(this);
-        this.querySelector('div').appendChild(this.renderer.domElement);
+        this.container.appendChild(this.renderer.domElement);
 
         this.orbitControls = new OrbitControls(this.threeCamera, this.renderer.domElement);
         this.orbitControls.minZoom = 0.5;
@@ -301,7 +354,6 @@ class Viewport extends HTMLElement {
 
     loadSkin(dataURL, mode = "classic") {
         if (!this.skinModel) this.initScene();
-        this.currentSkinURL = dataURL;
 
         const raw = new Image();
         raw.onload = () => {
