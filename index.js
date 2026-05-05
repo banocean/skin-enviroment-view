@@ -300,9 +300,7 @@ class Viewport extends HTMLElement {
 
     previewToDataURL() {
         this.doRender();
-        return new Promise((resolve) => {
-            this.renderer.domElement.toBlob((blob) => resolve(blob));
-        });
+        return this.renderer.domElement.toDataURL("image/png");
     }
 
     async toGLB() {
