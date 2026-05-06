@@ -141,8 +141,8 @@ export function fromMcSkinsPoseToConfig(legacyObj) {
         skin: 'skin',
         head: 'head',
         body: 'body',
-        leftarm: 'leftArm',
-        rightarm: 'rightArm',
+        leftarm: 'rightArm',
+        rightarm: 'leftArm',
         leftleg: 'leftLeg',
         rightleg: 'rightLeg',
     };

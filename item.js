@@ -43,11 +43,11 @@ export class ItemRenderer {
         const item = this.model[`${side}_arm`].skeleton.bones[2].children[0];
         if (!item) return true;
         if (fist) {
-            item.position.set(side === 'left' ? 0.475 : -0.475, 0.05, 0.65);
+            item.position.set(side === 'left' ? -0.475 : 0.475, 0.05, 0.65);
             item.scale.setScalar(0.04);
             item.rotation.set(1.56, 3.15, 0);
         } else {
-            item.position.set(side === 'left' ? 0.5 : -0.5, 0, 0.77);
+            item.position.set(side === 'left' ? -0.5 : 0.5, 0, 0.77);
             item.scale.setScalar(0.055);
             item.rotation.set(
                 itemNum == 750 ? 0     : 3.2,

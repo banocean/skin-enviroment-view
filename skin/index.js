@@ -31,14 +31,14 @@ export class SkinModel {
     this.head = makeLimb(this._render, innerBase, 0, 8, 8, 8, 8, 1);
     this.outer = makeLimb(this._render, innerBase, 0, 8, 8, 8, 8, 1); // hat
     this.body = makeLimb(this._render, innerBase, 0, -2, 8, 12, 4, 3);
-    this.leftArm = makeLimb(this._render, innerBase, -armX, -2, armW, 12, 4, 1);
-    this.rightArm = makeLimb(this._render, innerBase, armX, -2, armW, 12, 4, 0.5);
+    this.leftArm = makeLimb(this._render, innerBase, armX, -2, armW, 12, 4, 0.5);
+    this.rightArm = makeLimb(this._render, innerBase, -armX, -2, armW, 12, 4, 1);
     this.leftLeg = makeLimb(this._render, innerBase, -2, -14, 4, 12, 4, 2);
     this.rightLeg = makeLimb(this._render, innerBase, 2, -14, 4, 12, 4, 1);
 
     this.outerBody = makeLimb(this._render, outerBase, 0, -2, 7.5, 11.5, 4, 3);
-    this.outerLeftArm = makeLimb(this._render, outerBase, -armX, -2, armW, 12, 4, 1, true);
-    this.outerRightArm = makeLimb(this._render, outerBase, armX, -2, armW, 12, 4, 0.5, true);
+    this.outerLeftArm = makeLimb(this._render, outerBase, armX, -2, armW, 12, 4, 0.5, true);
+    this.outerRightArm = makeLimb(this._render, outerBase, -armX, -2, armW, 12, 4, 1, true);
     this.outerLeftLeg = makeLimb(this._render, outerBase, -2, -14, 4, 12, 4, 2, true);
     this.outerRightLeg = makeLimb(this._render, outerBase, 2, -14, 4, 12, 4, 1, true);
 
@@ -82,11 +82,11 @@ export class SkinModel {
     this.outer.geometry.translate(0.005, -0.455, 0);
     this.headGroup.position.y = 0.5;
 
-    this.leftArm.geometry.translate(0.5, -0.4, 0);
-    this.leftArmGroup.position.set(-0.5, 0.4, 0);
+    this.leftArm.geometry.translate(-0.5, -0.4, 0);
+    this.leftArmGroup.position.set(0.5, 0.4, 0);
 
-    this.rightArm.geometry.translate(-0.5, -0.4, 0);
-    this.rightArmGroup.position.set(0.5, 0.4, 0);
+    this.rightArm.geometry.translate(0.5, -0.4, 0);
+    this.rightArmGroup.position.set(-0.5, 0.4, 0);
 
     this.leftLeg.geometry.translate(0.25, 1, 0);
     this.leftLegGroup.position.set(-0.25, -1, 0);
@@ -94,8 +94,8 @@ export class SkinModel {
     this.rightLeg.geometry.translate(-0.25, 1, 0);
     this.rightLegGroup.position.set(0.25, -1, 0);
 
-    this.outerLeftArm.geometry.translate(0.45, -0.45, 0);
-    this.outerRightArm.geometry.translate(-0.45, -0.45, 0);
+    this.outerLeftArm.geometry.translate(-0.45, -0.45, 0);
+    this.outerRightArm.geometry.translate(0.45, -0.45, 0);
     this.outerLeftLeg.geometry.translate(0.23, 1.11, 0);
     this.outerRightLeg.geometry.translate(-0.23, 1.11, 0);
 
@@ -159,15 +159,15 @@ export class SkinModel {
     const aw = this.mode === "slim" ? 3 : 4;
     applyBoxUV(texW, texH, this.head.geometry, 0, 48 * s, 8 * s, 8 * s, 8 * s);
     applyBoxUV(texW, texH, this.body.geometry, 16 * s, 32 * s, 8 * s, 12 * s, 4 * s);
-    applyBoxUV(texW, texH, this.leftArm.geometry, 40 * s, 32 * s, aw * s, 12 * s, 4 * s);
+    applyBoxUV(texW, texH, this.leftArm.geometry, 32 * s, 0, aw * s, 12 * s, 4 * s);
     applyBoxUV(texW, texH, this.leftLeg.geometry, 0, 32 * s, 4 * s, 12 * s, 4 * s);
-    applyBoxUV(texW, texH, this.rightArm.geometry, 32 * s, 0, aw * s, 12 * s, 4 * s);
+    applyBoxUV(texW, texH, this.rightArm.geometry, 40 * s, 32 * s, aw * s, 12 * s, 4 * s);
     applyBoxUV(texW, texH, this.rightLeg.geometry, 16 * s, 0, 4 * s, 12 * s, 4 * s);
     applyBoxUV(texW, texH, this.outer.geometry, 32 * s, 48 * s, 8 * s, 8 * s, 8 * s);
     applyBoxUV(texW, texH, this.outerBody.geometry, 16 * s, 16 * s, 8 * s, 12 * s, 4 * s);
-    applyBoxUV(texW, texH, this.outerLeftArm.geometry, 40 * s, 16 * s, aw * s, 12 * s, 4 * s);
+    applyBoxUV(texW, texH, this.outerLeftArm.geometry, 48 * s, 0, aw * s, 12 * s, 4 * s);
     applyBoxUV(texW, texH, this.outerLeftLeg.geometry, 0, 16 * s, 4 * s, 12 * s, 4 * s);
-    applyBoxUV(texW, texH, this.outerRightArm.geometry, 48 * s, 0, aw * s, 12 * s, 4 * s);
+    applyBoxUV(texW, texH, this.outerRightArm.geometry, 40 * s, 16 * s, aw * s, 12 * s, 4 * s);
     applyBoxUV(texW, texH, this.outerRightLeg.geometry, 0, 0, 4 * s, 12 * s, 4 * s);
   }
 
