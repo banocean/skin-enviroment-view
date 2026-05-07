@@ -145,6 +145,7 @@ class Viewport extends HTMLElement {
 
         if (propertyPath[0] === 'camera' && !this._isSyncingCamera) {
             this.updateCameraFromConfig();
+            if (this.orbitControls) this.orbitControls.update();
         }
         if (propertyPath[0] === 'cameraTarget' && !this._isSyncingCamera && this.orbitControls) {
             this.orbitControls.target.set(this.#config.cameraTarget.x, this.#config.cameraTarget.y, this.#config.cameraTarget.z);
@@ -196,9 +197,28 @@ class Viewport extends HTMLElement {
 
     updateCameraFromConfig() {
         const cam = this.#config.camera;
+        if (!cam) return;
         this.threeCamera.position.set(cam.position.x, cam.position.y, cam.position.z);
         this.threeCamera.zoom = cam.zoom;
         this.threeCamera.updateProjectionMatrix();
+        if (this.orbitControls) {
+            const t = this.#config.cameraTarget;
+            this.orbitControls.target.set(t.x, t.y, t.z);
+            this.orbitControls.update();
+        }
+    }
+
+    resetCamera(cam, target) {
+        if (!this.orbitControls) return;
+        const c = cam || this.#config.camera;
+        const t = target || this.#config.cameraTarget;
+        this.threeCamera.position.set(c.position.x, c.position.y, c.position.z);
+        this.threeCamera.zoom = c.zoom;
+        this.threeCamera.updateProjectionMatrix();
+        this.orbitControls.target.set(t.x, t.y, t.z);
+        this.orbitControls.update();
+        this.orbitControls.saveState();
+        this.doRender();
     }
 
     updateLightsFromConfig() {
@@ -265,6 +285,8 @@ class Viewport extends HTMLElement {
         this.setupRenderer();
 
         this.updateCameraFromConfig();
+        this.orbitControls.target.set(this.#config.cameraTarget.x, this.#config.cameraTarget.y, this.#config.cameraTarget.z);
+        this.orbitControls.update();
         this.updateLightsFromConfig();
         this.updateFloorFromConfig();
         this.updateBackgroundFromConfig();
@@ -355,27 +377,27 @@ class Viewport extends HTMLElement {
 
         const raw = new Image();
         raw.onload = () => {
-                this.skinModel.mode = mode;
-                this.skinModel.setImage(raw, SKIN_HEIGHT, SKIN_WIDTH);
+            this.skinModel.mode = mode;
+            this.skinModel.setImage(raw, SKIN_HEIGHT, SKIN_WIDTH);
 
-                if (!this.modelReady) {
-                    this.skinModel.rotate(0.65, 0.3);
-                    this.skinModel.scale(2.5, 2.5, 2.5);
-                    this.doRender();
+            if (!this.modelReady) {
+                this.skinModel.rotate(0.65, 0.3);
+                this.skinModel.scale(2.5, 2.5, 2.5);
+                this.doRender();
 
-                    this.skinModel.reset();
-                    this.skinModel.headOnly(false);
-                    this.skinModel.scale(1, 1, 1);
-                    this.skinModel.move(0, 0.5);
+                this.skinModel.reset();
+                this.skinModel.headOnly(false);
+                this.skinModel.scale(1, 1, 1);
+                this.skinModel.move(0, 0.5);
 
-                    this.modelReady = true;
-                    this.renderer.shadowMap.needsUpdate = true;
-                    this.doRender();
-                    this.sceneEnv.updateFloorY();
-                } else {
-                    this.skinModel.updateFromConfig(this.#config);
-                    this.doRender();
-                }
+                this.modelReady = true;
+                this.renderer.shadowMap.needsUpdate = true;
+                this.doRender();
+                this.sceneEnv.updateFloorY();
+            } else {
+                this.skinModel.updateFromConfig(this.#config);
+                this.doRender();
+            }
         }
         raw.src = dataURL;
     }
