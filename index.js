@@ -61,6 +61,7 @@ class Viewport extends HTMLElement {
         this.modelReady = false;
 
         this._isSyncingCamera = false;
+        this._isResizing = false;
 
         this.config = createDefaultConfig();
 
@@ -74,6 +75,8 @@ class Viewport extends HTMLElement {
 
     onResize() {
         if (!this.renderer) return;
+
+        this._isResizing = true;
 
         let dpr = window.devicePixelRatio * (this.resolution || 2);
 
@@ -89,6 +92,8 @@ class Viewport extends HTMLElement {
         this.threeCamera.updateProjectionMatrix();
 
         this.doRender();
+
+        this._isResizing = false;
     }
 
     connectedCallback() {
@@ -109,6 +114,8 @@ class Viewport extends HTMLElement {
     }
 
     handleConfigChange(propertyPath, newValue, oldValue) {
+        if (this._isResizing) return;
+
         if (propertyPath[0] === 'root') {
             this.updateCameraFromConfig();
             this.updateLightsFromConfig();
