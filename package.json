@@ -2,13 +2,13 @@
   "name": "skin-environment-view",
   "version": "1.0.0",
   "description": "",
-  "homepage": "https://github.com/banocean/skin-enviroment-view#readme",
+  "homepage": "https://github.com/banocean/skin-environment-view#readme",
   "bugs": {
-    "url": "https://github.com/banocean/skin-enviroment-view/issues"
+    "url": "https://github.com/banocean/skin-environment-view/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/banocean/skin-enviroment-view.git"
+    "url": "git+https://github.com/banocean/skin-environment-view.git"
   },
   "license": "MIT",
   "author": "",
