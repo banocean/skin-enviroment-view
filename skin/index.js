@@ -190,11 +190,32 @@ export class SkinModel {
 
   setImage(imageElement, texW, texH) {
     const wasHeadOnly = !this.body.visible;
+    const prevPosition = this.group?.position ? { x: this.group.position.x, y: this.group.position.y, z: this.group.position.z } : { x: 0, y: 0, z: 0 };
+    const prevScale = this.group?.scale ? { x: this.group.scale.x, y: this.group.scale.y, z: this.group.scale.z } : { x: 1, y: 1, z: 1 };
+    const prevRotation = this.group?.rotation ? { x: this.group.rotation.x, y: this.group.rotation.y, z: this.group.rotation.z } : { x: 0, y: 0, z: 0 };
+
+    const preservedItems = {
+      left: this.left_arm?.skeleton.bones[2].children[0] || null,
+      right: this.right_arm?.skeleton.bones[2].children[0] || null
+    };
+
     if (this.viewport.scene.children.includes(this.group)) this._dispose();
     this._build();
     this.applyUV(texW, texH);
     this.viewport.scene.add(this.group);
     this.setTexture(imageElement);
+
+    if (preservedItems.left) {
+      this.left_arm.skeleton.bones[2].add(preservedItems.left);
+    }
+    if (preservedItems.right) {
+      this.right_arm.skeleton.bones[2].add(preservedItems.right);
+    }
+
+    this.group.position.set(prevPosition.x, prevPosition.y, prevPosition.z);
+    this.group.scale.set(prevScale.x, prevScale.y, prevScale.z);
+    this.group.rotation.set(prevRotation.x, prevRotation.y, prevRotation.z);
+
     this.headOnly(wasHeadOnly);
   }
 
